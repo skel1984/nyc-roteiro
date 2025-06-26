@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 
@@ -28,7 +27,13 @@ for data, regiao in dias:
     with st.expander(f"📅 {data} — {regiao}"):
         pontos_dia = df[df['Regiao'].str.contains(regiao.split('+')[0].strip(), case=False)]
         st.write(pontos_dia[['Nome', 'Categoria', 'Latitude', 'Longitude']])
-        st.map(pontos_dia[['Latitude', 'Longitude']])
+
+        # CORREÇÃO: Só exibe o mapa se houver pontos
+        if not pontos_dia.empty:
+            st.map(pontos_dia[['Latitude', 'Longitude']])
+        else:
+            st.warning("Nenhum ponto encontrado para essa região.")
+
         st.text_area(f"Anotações para {data}", placeholder="Escreva algo...", key=f"nota_{data}")
 
         if "Rooftop" in regiao or data in ["02/07", "04/07", "05/07", "07/07"]:
